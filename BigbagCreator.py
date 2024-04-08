@@ -6,8 +6,8 @@ from tqdm import tqdm
 class BigbagCreator():
     def __init__(self):
 
-        inputbagpath = '/media/oliver/Elements SE/bags/2022-08-30_out1_camlidar/' # 'input bag files path'
-        outputbag = '/media/oliver/Elements SE/bags/2022-08-30_out1_camlidar.bag'# output bag file'
+        inputbagpath = '/media/oliver/Elements SE/Lingongdata/20230103/temp/' # 'input bag files path'
+        outputbag = '/media/oliver/Elements SE/Lingongdata/20230103/202301032.bag'# output bag file'
         files= os.listdir(inputbagpath)
         files.sort(key=lambda x:int(x[:-4]))
         with Bag(outputbag, 'w') as o:
