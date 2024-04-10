@@ -59,7 +59,7 @@ class Extract():
         # Create a map for quicker lookup
         type_map = {topic_types[i].name: topic_types[i].type for i in range(len(topic_types))}
         # Set filter for topic of string type
-        enable_topics = ['/camera/image', '/livox/front', '/livox/back', '/livox/mid360']
+        enable_topics = ['/camera/image', '/livox/front', '/livox/back', '/livox/mid360', '/imu/data']
         storage_filter = StorageFilter(topics=enable_topics)
         reader.set_filter(storage_filter)
         # No filter
@@ -106,6 +106,15 @@ class Extract():
                 point_cloud_np.tofile(path+"/point_cloud/" + sensor_name[2] + "/"+front_name)
                 # 读取点云数据
                 # point_cloud_np1 = np.fromfile(path+"/point_cloud/front/"+front_name, dtype=np.float64).reshape(-1, 7)
+
+            elif topic == "/imu/data":
+                imu_data = np.array([ros_message.linear_acceleration.x, ros_message.linear_acceleration.y, ros_message.linear_acceleration.z,
+                                    ros_message.angular_velocity.x, ros_message.angular_velocity.y, ros_message.angular_velocity.z,
+                                    ros_message.orientation.x, ros_message.orientation.y, ros_message.orientation.z, ros_message.orientation.w])
+                timestr = "%.9f" % (ros_message.header.stamp.sec + ros_message.header.stamp.nanosec / 1e9)
+                write_txt_path = path + "/imu.txt"
+                with open(write_txt_path, 'a') as f:
+                    f.write(timestr + ' ' + ' '.join(str(i) for i in imu_data) + '\n')
 
 class Writebag():
     def __init__(self, src_path, bag_path):
@@ -198,4 +207,4 @@ def main(do="extract"):
     # rclpy.shutdown()
 
 if __name__ == '__main__':
-    main("write")
+    main()
